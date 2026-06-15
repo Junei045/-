@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>あいろの タイピングきょうしつ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1b2a4a;
+    --ink-soft:#5a6a86;
+    --paper:#eef4fb;
+    --panel:#ffffff;
+    --orange:#ff8a3d;
+    --orange-d:#ef6f1c;
+    --sky:#3da5ff;
+    --sky-d:#1f7fd6;
+    --green:#2fbf71;
+    --yellow:#ffd23f;
+    --red:#ff5d6c;
+    --line:#dbe6f3;
+    --shadow:0 10px 0 rgba(27,42,74,.08), 0 18px 38px rgba(27,42,74,.14);
+    --radius:22px;
+    font-family:"M PLUS Rounded 1c",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background:
+      radial-gradient(1200px 500px at 15% -10%, #fff6ec 0%, transparent 60%),
+      radial-gradient(1000px 500px at 110% 0%, #e4f1ff 0%, transparent 55%),
+      var(--paper);
+    color:var(--ink);
+    min-height:100%;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  .wrap{max-width:980px;margin:0 auto;padding:18px 16px 60px}
+  .hidden{display:none !important}
+
+  /* ===== トップバー ===== */
+  .topbar{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+  .brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:20px}
+  .brand .logo{width:46px;height:46px;flex:none}
+  .topbar .spacer{flex:1}
+  .iconbtn{
+    border:none;background:var(--panel);color:var(--ink);font-family:inherit;font-weight:700;
+    border-radius:14px;padding:10px 14px;cursor:pointer;box-shadow:0 4px 0 var(--line);
+    font-size:15px;display:inline-flex;align-items:center;gap:7px;transition:transform .08s;
+  }
+  .iconbtn:hover{transform:translateY(-1px)}
+  .iconbtn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--line)}
+  .iconbtn[aria-pressed="false"]{opacity:.55}
+
+  /* ===== ホーム ===== */
+  .hero{
+    background:var(--panel);border-radius:var(--radius);box-shadow:var(--shadow);
+    padding:30px 28px;display:flex;gap:26px;align-items:center;margin-bottom:26px;position:relative;overflow:hidden;
+  }
+  .hero::after{content:"";position:absolute;right:-40px;bottom:-50px;width:200px;height:200px;border-radius:50%;background:#fff2e3;z-index:0}
+  .hero .mascot{width:140px;height:140px;flex:none;position:relative;z-index:1}
+  .hero h1{font-size:34px;line-height:1.25;font-weight:800;letter-spacing:.5px;position:relative;z-index:1}
+  .hero p{color:var(--ink-soft);margin-top:10px;font-weight:500;font-size:16px;position:relative;z-index:1}
+
+  .section-label{font-weight:800;font-size:15px;color:var(--sky-d);letter-spacing:1px;margin:0 4px 12px;display:flex;align-items:center;gap:8px}
+  .section-label::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--orange)}
+
+  .levels{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .level-card{
+    border:none;cursor:pointer;text-align:left;font-family:inherit;color:var(--ink);
+    background:var(--panel);border-radius:var(--radius);padding:22px 20px;box-shadow:var(--shadow);
+    transition:transform .1s;position:relative;overflow:hidden;border-top:7px solid var(--c);
+  }
+  .level-card:hover{transform:translateY(-4px)}
+  .level-card:active{transform:translateY(0)}
+  .level-card .lv-grade{font-size:13px;font-weight:700;color:#fff;background:var(--c);display:inline-block;padding:4px 12px;border-radius:99px;margin-bottom:12px}
+  .level-card .lv-title{font-size:21px;font-weight:800;line-height:1.3}
+  .level-card .lv-sub{color:var(--ink-soft);font-size:14px;margin-top:8px;font-weight:500;min-height:42px}
+  .level-card .lv-icon{font-size:40px;margin-bottom:6px}
+
+  /* ===== 回（セッション）選択 ===== */
+  .backrow{margin-bottom:16px}
+  .panel-head{display:flex;align-items:center;gap:16px;margin-bottom:20px}
+  .panel-head .badge{font-size:13px;font-weight:700;color:#fff;padding:5px 14px;border-radius:99px}
+  .panel-head h2{font-size:26px;font-weight:800}
+  .sessions{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .session-card{
+    border:none;cursor:pointer;text-align:left;font-family:inherit;color:var(--ink);
+    background:var(--panel);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);transition:transform .1s;
+  }
+  .session-card:hover{transform:translateY(-4px)}
+  .session-card .s-num{font-size:13px;font-weight:800;color:var(--sky-d)}
+  .session-card .s-title{font-size:19px;font-weight:800;margin:6px 0 8px}
+  .session-card .s-desc{color:var(--ink-soft);font-size:13.5px;font-weight:500;line-height:1.6}
+  .session-card .s-stars{margin-top:12px;font-size:18px;letter-spacing:2px;color:var(--line)}
+  .session-card .s-stars .on{color:var(--yellow)}
+
+  /* ===== プレイ画面 ===== */
+  .play{background:var(--panel);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 22px 26px;position:relative}
+  .play-top{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+  .play-top .pt-mascot{width:54px;height:54px;flex:none}
+  .play-top .pt-info{flex:1}
+  .play-top .pt-stage{font-weight:800;font-size:17px}
+  .play-top .pt-prompt{color:var(--ink-soft);font-size:13.5px;font-weight:500}
+  .play-top .pt-stat{text-align:right;font-weight:700;font-size:14px;color:var(--ink-soft);white-space:nowrap}
+  .progress{height:12px;background:var(--paper);border-radius:99px;overflow:hidden;margin:10px 0 4px}
+  .progress > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),#7ad99f);border-radius:99px;transition:width .25s}
+
+  .stage-area{text-align:center;padding:22px 8px 8px;min-height:190px;display:flex;flex-direction:column;justify-content:center;align-items:center}
+  .display-word{font-size:54px;font-weight:800;letter-spacing:2px;line-height:1.15}
+  .display-word .done{color:var(--green)}
+  .display-word .next{color:var(--orange);text-decoration:underline;text-underline-offset:8px}
+  .display-letter{font-size:120px;font-weight:800;line-height:1;color:var(--ink)}
+  .romaji-hint{margin-top:16px;font-size:24px;font-weight:700;color:var(--ink-soft);letter-spacing:3px}
+  .romaji-hint .done{color:var(--green)}
+  .romaji-hint .next{color:var(--orange);background:#fff1e5;border-radius:8px;padding:1px 6px}
+  .find-label{font-size:18px;font-weight:700;color:var(--sky-d);margin-bottom:6px}
+  .timer-big{font-size:22px;font-weight:800;color:var(--orange-d);margin-bottom:8px}
+  .shake{animation:shake .25s}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+  .pop{animation:pop .3s}
+  @keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.12)}100%{transform:scale(1)}}
+
+  /* ===== 画面キーボード ===== */
+  .keyboard{margin-top:22px;display:flex;flex-direction:column;gap:8px;align-items:center;user-select:none}
+  .krow{display:flex;gap:8px;justify-content:center}
+  .key{
+    width:52px;height:52px;border-radius:13px;background:#f4f8fd;border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;color:var(--ink-soft);
+    box-shadow:0 3px 0 #d4e1f0;position:relative;transition:transform .06s,background .1s;
+  }
+  .key.home{background:#eaf3ff;color:var(--sky-d)}
+  .key.home::after{content:"";position:absolute;bottom:7px;width:14px;height:3px;border-radius:2px;background:var(--sky)}
+  .key.space{width:300px}
+  .key.next{background:var(--orange);color:#fff;border-color:var(--orange-d);box-shadow:0 3px 0 var(--orange-d);transform:translateY(-3px)}
+  .key.hit{background:var(--green);color:#fff;border-color:#249a59}
+  @media (max-width:760px){
+    .key{width:40px;height:44px;font-size:15px;border-radius:10px}
+    .key.space{width:200px}
+  }
+  @media (max-width:520px){
+    .key{width:30px;height:38px;font-size:13px;gap:5px}
+    .key.space{width:150px}
+    .display-letter{font-size:84px}
+    .display-word{font-size:38px}
+    .hero{flex-direction:column;text-align:center}
+  }
+
+  .play-foot{display:flex;justify-content:space-between;align-items:center;margin-top:18px;gap:10px}
+  .note{font-size:12.5px;color:var(--ink-soft);font-weight:500}
+
+  /* ===== 結果 ===== */
+  .result{background:var(--panel);border-radius:var(--radius);box-shadow:var(--shadow);padding:34px 28px;text-align:center}
+  .result .mascot{width:120px;height:120px}
+  .result h2{font-size:30px;font-weight:800;margin:10px 0}
+  .result .stars{font-size:54px;letter-spacing:10px;margin:6px 0 14px;color:var(--line)}
+  .result .stars .on{color:var(--yellow);animation:pop .4s}
+  .result .bubble{background:#fff6ec;border-radius:18px;padding:16px 18px;display:inline-block;font-weight:700;font-size:18px;color:var(--orange-d);margin-bottom:20px}
+  .stats{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:24px}
+  .stat-box{background:var(--paper);border-radius:16px;padding:14px 22px;min-width:110px}
+  .stat-box .v{font-size:28px;font-weight:800}
+  .stat-box .l{font-size:13px;color:var(--ink-soft);font-weight:600}
+
+  .btn{
+    border:none;font-family:inherit;font-weight:800;cursor:pointer;border-radius:16px;font-size:17px;
+    padding:14px 26px;transition:transform .08s;
+  }
+  .btn-primary{background:var(--orange);color:#fff;box-shadow:0 5px 0 var(--orange-d)}
+  .btn-primary:active{transform:translateY(4px);box-shadow:0 1px 0 var(--orange-d)}
+  .btn-sky{background:var(--sky);color:#fff;box-shadow:0 5px 0 var(--sky-d)}
+  .btn-sky:active{transform:translateY(4px);box-shadow:0 1px 0 var(--sky-d)}
+  .btn-ghost{background:var(--paper);color:var(--ink);box-shadow:0 4px 0 var(--line)}
+  .btn-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
+  .footer{text-align:center;color:var(--ink-soft);font-size:12.5px;font-weight:500;margin-top:34px;line-height:1.7}
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none !important;transition:none !important}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 100 100" aria-hidden="true">
+        <rect x="14" y="34" width="72" height="46" rx="12" fill="#3da5ff"/>
+        <rect x="22" y="42" width="56" height="30" rx="6" fill="#eef4fb"/>
+        <circle cx="40" cy="24" r="7" fill="#ff8a3d"/><circle cx="60" cy="24" r="7" fill="#ffd23f"/>
+        <rect x="38" y="30" width="24" height="6" rx="3" fill="#1b2a4a"/>
+      </svg>
+      <span>タイピングきょうしつ</span>
+    </div>
+    <div class="spacer"></div>
+    <button class="iconbtn" id="soundBtn" aria-pressed="true">🔊 おと</button>
+    <button class="iconbtn hidden" id="homeBtn">🏠 さいしょへ</button>
+  </div>
+
+  <!-- ===== ホーム ===== -->
+  <section id="screen-home">
+    <div class="hero">
+      <svg class="mascot" id="heroMascot" viewBox="0 0 120 120" aria-hidden="true"></svg>
+      <div>
+        <h1>あいろと いっしょに<br>タイピングを はじめよう！</h1>
+        <p>がくねんを えらんでね。すきな「かい」から れんしゅうできるよ。</p>
+      </div>
+    </div>
+    <div class="section-label">がくねんを えらぶ</div>
+    <div class="levels" id="levelGrid"></div>
+  </section>
+
+  <!-- ===== 回えらび ===== -->
+  <section id="screen-sessions" class="hidden">
+    <div class="backrow"><button class="iconbtn" data-back="home">← もどる</button></div>
+    <div class="panel-head">
+      <span class="badge" id="sessBadge"></span>
+      <h2 id="sessTitle"></h2>
+    </div>
+    <div class="section-label">れんしゅうする かいを えらぶ</div>
+    <div class="sessions" id="sessionGrid"></div>
+  </section>
+
+  <!-- ===== プレイ ===== -->
+  <section id="screen-play" class="hidden">
+    <div class="backrow"><button class="iconbtn" data-back="sessions">← かいえらびへ</button></div>
+    <div class="play">
+      <div class="play-top">
+        <svg class="pt-mascot" id="playMascot" viewBox="0 0 120 120" aria-hidden="true"></svg>
+        <div class="pt-info">
+          <div class="pt-stage" id="stageName"></div>
+          <div class="pt-prompt" id="stagePrompt"></div>
+        </div>
+        <div class="pt-stat" id="stageStat"></div>
+      </div>
+      <div class="progress"><i id="progBar"></i></div>
+      <div class="stage-area" id="stageArea"></div>
+      <div class="keyboard" id="keyboard"></div>
+      <div class="play-foot">
+        <span class="note" id="footNote">パソコンの キーボードで うってね</span>
+        <button class="iconbtn" id="skipBtn">つぎへ ▶</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 結果 ===== -->
+  <section id="screen-result" class="hidden">
+    <div class="result">
+      <svg class="mascot" id="resultMascot" viewBox="0 0 120 120" aria-hidden="true"></svg>
+      <h2 id="resultTitle">クリア！</h2>
+      <div class="stars" id="resultStars"></div>
+      <div class="bubble" id="resultMsg"></div>
+      <div class="stats" id="resultStats"></div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" id="retryBtn">もういちど</button>
+        <button class="btn btn-primary" id="nextBtn">つぎの かいへ ▶</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">
+    あいろの タイピングきょうしつ ・ 豊田連合町内会自治会／飯島小中学校 学校運営協議会<br>
+    パソコン・Chromebook で うごきます（タブレットは そとづけキーボードが ひつようです）
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   ローマ字 / キー はんてい エンジン
+   ========================================================= */
+const KANA={
+ "あ":["a"],"い":["i"],"う":["u"],"え":["e"],"お":["o"],
+ "か":["ka"],"き":["ki"],"く":["ku"],"け":["ke"],"こ":["ko"],
+ "が":["ga"],"ぎ":["gi"],"ぐ":["gu"],"げ":["ge"],"ご":["go"],
+ "さ":["sa"],"し":["shi","si"],"す":["su"],"せ":["se"],"そ":["so"],
+ "ざ":["za"],"じ":["ji","zi"],"ず":["zu"],"ぜ":["ze"],"ぞ":["zo"],
+ "た":["ta"],"ち":["chi","ti"],"つ":["tsu","tu"],"て":["te"],"と":["to"],
+ "だ":["da"],"ぢ":["di"],"づ":["du"],"で":["de"],"ど":["do"],
+ "な":["na"],"に":["ni"],"ぬ":["nu"],"ね":["ne"],"の":["no"],
+ "は":["ha"],"ひ":["hi"],"ふ":["fu","hu"],"へ":["he"],"ほ":["ho"],
+ "ば":["ba"],"び":["bi"],"ぶ":["bu"],"べ":["be"],"ぼ":["bo"],
+ "ぱ":["pa"],"ぴ":["pi"],"ぷ":["pu"],"ぺ":["pe"],"ぽ":["po"],
+ "ま":["ma"],"み":["mi"],"む":["mu"],"め":["me"],"も":["mo"],
+ "や":["ya"],"ゆ":["yu"],"よ":["yo"],
+ "ら":["ra"],"り":["ri"],"る":["ru"],"れ":["re"],"ろ":["ro"],
+ "わ":["wa"],"を":["wo"],
+ "きゃ":["kya"],"きゅ":["kyu"],"きょ":["kyo"],
+ "しゃ":["sha","sya"],"しゅ":["shu","syu"],"しょ":["sho","syo"],
+ "ちゃ":["cha","tya"],"ちゅ":["chu","tyu"],"ちょ":["cho","tyo"],
+ "にゃ":["nya"],"にゅ":["nyu"],"にょ":["nyo"],
+ "ひゃ":["hya"],"ひゅ":["hyu"],"ひょ":["hyo"],
+ "みゃ":["mya"],"みゅ":["myu"],"みょ":["myo"],
+ "りゃ":["rya"],"りゅ":["ryu"],"りょ":["ryo"],
+ "ぎゃ":["gya"],"ぎゅ":["gyu"],"ぎょ":["gyo"],
+ "じゃ":["ja","jya","zya"],"じゅ":["ju","jyu","zyu"],"じょ":["jo","jyo","zyo"],
+ "びゃ":["bya"],"びゅ":["byu"],"びょ":["byo"],
+ "ぴゃ":["pya"],"ぴゅ":["pyu"],"ぴょ":["pyo"],
+ " ":[" "],"　":[" "]
+};
+const VOWELS=new Set(["a","i","u","e","o"]);
+
+function buildUnits(str){
+  const raw=[];
+  for(let i=0;i<str.length;i++){
+    const two=str.substr(i,2);
+    if(KANA[two]){raw.push({opt:KANA[two].slice()});i++;continue;}
+    const ch=str[i];
+    if(ch==="っ"){raw.push({sokuon:true});continue;}
+    if(ch==="ん"){raw.push({n:true});continue;}
+    if(KANA[ch]){raw.push({opt:KANA[ch].slice()});}
+    else {raw.push({opt:[ch.toLowerCase()]});} // アルファベット・数字など
+  }
+  const merged=[];
+  for(let i=0;i<raw.length;i++){
+    if(raw[i].sokuon){
+      const nx=raw[i+1];
+      if(nx&&nx.opt){nx.opt=nx.opt.map(o=>o[0]+o);}
+      continue;
+    }
+    merged.push(raw[i]);
+  }
+  for(let i=0;i<merged.length;i++){
+    if(merged[i].n){
+      const nx=merged[i+1];
+      if(!nx){merged[i].opt=["n","nn"];}
+      else{
+        const f=nx.opt[0][0];
+        if(VOWELS.has(f)||f==="y"||f==="n"){merged[i].opt=["nn"];}
+        else{merged[i].opt=["n","nn"];}
+      }
+    }
+  }
+  return merged.map(u=>u.opt);
+}
+function isPrefix(u,i,s){
+  if(i>=u.length)return s==="";
+  if(s==="")return true;
+  for(const o of u[i]){
+    if(o.length>s.length){if(o.startsWith(s))return true;}
+    else if(s.startsWith(o)&&isPrefix(u,i+1,s.slice(o.length)))return true;
+  }
+  return false;
+}
+function isComplete(u,i,s){
+  if(i>=u.length)return s==="";
+  for(const o of u[i]){if(s.startsWith(o)&&isComplete(u,i+1,s.slice(o.length)))return true;}
+  return false;
+}
+function nextChar(u,i,s){
+  if(i>=u.length)return null;
+  for(const o of u[i]){
+    if(o.length>s.length){if(o.startsWith(s))return o[s.length];}
+    else if(s.startsWith(o)){const r=nextChar(u,i+1,s.slice(o.length));if(r!==null)return r;}
+  }
+  return (u[i][0][s.length]||u[i][0][0]);
+}
+
+/* =========================================================
+   コンテンツ（3レベル × 3かい）
+   ========================================================= */
+const A_Z="abcdefghijklmnopqrstuvwxyz".split("");
+function letters(arr){return arr.map(c=>({display:c.toUpperCase(),type:c.toLowerCase(),kind:"letter"}));}
+function nums(arr){return arr.map(n=>({display:""+n,type:""+n,kind:"letter"}));}
+function kanas(arr){return arr.map(k=>({display:k,type:k,kind:"kana"}));}
+function words(arr){return arr.map(w=>({display:w,type:w,kind:"word"}));}
+function sents(arr){return arr.map(s=>({display:s,type:s,kind:"sentence"}));}
+
+const LEVELS={
+ low:{key:"low",grade:"1・2年生",icon:"🧸",color:"#ff8a3d",
+   title:"キーボードと なかよし",
+   sub:"キーの ばしょを おぼえて、ゆびと なかよく なろう。",
+   sessions:[
+    {title:"キーボードって なあに？",desc:"ホームポジション（FとJの でっぱり）を しって、ひだり・みぎの ゆびに なれよう。",
+     stages:[
+      {name:"FとJを さがそう",prompt:"でっぱりの ある キーだよ",items:letters(["f","j","f","j","f","j"])},
+      {name:"ひだりの ゆび",prompt:"A S D F を おそう",items:letters(["a","s","d","f","a","s","d","f"])},
+      {name:"みぎの ゆび",prompt:"J K L を おそう",items:letters(["j","k","l","j","k","l","j","k"])},
+     ]},
+    {title:"もぐらたたき タイピング",desc:"でてきた もじを すばやく おそう。はんのうゲームで あきずに れんしゅう！",
+     stages:[
+      {name:"もぐらたたき その1",prompt:"でた もじを おそう",items:letters(["d","k","f","j","s","l","a","g","h","e"])},
+      {name:"もぐらたたき その2",prompt:"はやく おそう",items:letters(["t","y","r","u","w","i","o","p","q","b","n","m"])},
+      {name:"すうじ チャレンジ",prompt:"すうじキーを さがそう",items:nums([1,2,3,4,5,6,7,8,9,0])},
+     ]},
+    {title:"ABC マスター",desc:"アルファベットを じゅんばんに。さいごは ミックスで しあげ！",
+     stages:[
+      {name:"AからZまで",prompt:"じゅんばんに おそう",items:letters(A_Z)},
+      {name:"ミックス",prompt:"でた もじを おそう",items:letters(["m","a","r","i","o","s","u","k","e","b","t","n"])},
+      {name:"しあげチャレンジ",prompt:"さいごまで がんばろう",items:letters(["h","e","l","l","o","p","c","g","z","v"])},
+     ]},
+   ]},
+
+ mid:{key:"mid",grade:"3・4年生",icon:"✏️",color:"#3da5ff",
+   title:"ローマ字で うとう",
+   sub:"ならった ローマ字で、もじから ことばへ ステップアップ。",
+   sessions:[
+    {title:"あいうえお〜",desc:"ローマ字の きほん。1もじずつ、あ行から だんだん ふやしていこう。",
+     stages:[
+      {name:"あ行",prompt:"a i u e o",items:kanas(["あ","い","う","え","お"])},
+      {name:"か行・さ行",prompt:"ka ki ku … sa si …",items:kanas(["か","き","く","け","こ","さ","し","す","せ","そ"])},
+      {name:"た行・な行",prompt:"ta ti tu … na ni …",items:kanas(["た","ち","つ","て","と","な","に","ぬ","ね","の"])},
+     ]},
+    {title:"ことばに ちょうせん",desc:"2〜3もじの みじかい ことば。ローマ字を つなげて うってみよう。",
+     stages:[
+      {name:"みじかい ことば1",prompt:"したの ローマ字を みてね",items:words(["ねこ","いぬ","そら","やま","かさ"])},
+      {name:"みじかい ことば2",prompt:"つづけて いこう",items:words(["つき","ほし","くつ","みみ","はな"])},
+      {name:"がっこうの もの",prompt:"すこし ながい よ",items:words(["いす","つくえ","ほん","えんぴつ","けしごむ"])},
+     ]},
+    {title:"いきもの ずかん",desc:"どうぶつの なまえで たのしく。さいごは ミックスで しあげ！",
+     stages:[
+      {name:"どうぶつ1",prompt:"うってみよう",items:words(["うさぎ","かめ","ぞう","きりん","ぱんだ"])},
+      {name:"どうぶつ2",prompt:"つづけて いこう",items:words(["らいおん","さる","くま","わに","ぺんぎん"])},
+      {name:"しあげチャレンジ",prompt:"ぜんぶ うてるかな？",items:words(["こあら","とら","しか","かば","りす","たぬき"])},
+     ]},
+   ]},
+
+ high:{key:"high",grade:"5・6年生",icon:"⌨️",color:"#2fbf71",
+   title:"タッチタイピングに ちょうせん",
+   sub:"ホームポジションから 文・スピードまで。キーを見ずに打てたら名人。",
+   sessions:[
+    {title:"ホームポジションと ことば",desc:"正しい指の位置を意識して、よく使うことばを安定して打とう。",
+     stages:[
+      {name:"みじかい ことば",prompt:"指の位置を意識して",items:words(["あさ","ひる","よる","かお","みず","いえ"])},
+      {name:"がっこうの ことば",prompt:"少し長いことばへ",items:words(["ともだち","がっこう","せんせい","きょうしつ","べんきょう"])},
+      {name:"レベルアップ",prompt:"小さい「ゃゅょ」も登場",items:words(["かぞく","しゅくだい","やくそく","しゃしん","じゅぎょう"])},
+     ]},
+    {title:"文（ぶん）を うとう",desc:"スペースもふくめて、みじかい文をまとまりで打つ練習。",
+     stages:[
+      {name:"みじかい文1",prompt:"スペースは スペースキー",items:sents(["あさ はやく おきる","きょうは いいてんき","ほんを よむ"])},
+      {name:"みじかい文2",prompt:"つづけて いこう",items:sents(["がっこうで べんきょうする","ともだちと あそぶ"])},
+      {name:"しあげの文",prompt:"いきを とめずに",items:sents(["まいにち たいぴんぐを がんばる","ゆめに むかって すすむ"])},
+     ]},
+    {title:"スピードチャレンジ",desc:"60びょうで なんもじ打てる？ せいかくさも きろくしよう。",
+     timed:60,
+     stages:[
+      {name:"60びょう チャレンジ",prompt:"つぎつぎ でてくるよ",
+       items:words(["はる","なつ","あき","ふゆ","あめ","ゆき","かぜ","くも","うみ","やま",
+                    "がっこう","ともだち","きょうしつ","たいいく","おんがく","としょかん",
+                    "ひかり","みらい","ちきゅう","しぜん"])},
+     ]},
+   ]},
+};
+
+/* =========================================================
+   サウンド
+   ========================================================= */
+let soundOn=true;
+let actx=null;
+function tone(freq,dur,type="sine",vol=.18){
+  if(!soundOn)return;
+  try{
+    actx=actx||new (window.AudioContext||window.webkitAudioContext)();
+    const o=actx.createOscillator(),g=actx.createGain();
+    o.type=type;o.frequency.value=freq;
+    g.gain.setValueAtTime(vol,actx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.0001,actx.currentTime+dur);
+    o.connect(g);g.connect(actx.destination);
+    o.start();o.stop(actx.currentTime+dur);
+  }catch(e){}
+}
+const sGood=()=>tone(880,.09,"triangle",.16);
+const sWord=()=>{tone(660,.08,"triangle");setTimeout(()=>tone(990,.12,"triangle"),70);};
+const sBad =()=>tone(180,.12,"sawtooth",.10);
+const sClear=()=>{[523,659,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,.18,"triangle",.18),i*110));};
+
+/* =========================================================
+   マスコット「あいろ」SVG
+   ========================================================= */
+function mascot(mood="happy"){
+  const eye = mood==="cheer" ? '<path d="M44 52 q6 -8 12 0" stroke="#1b2a4a" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M64 52 q6 -8 12 0" stroke="#1b2a4a" stroke-width="4" fill="none" stroke-linecap="round"/>'
+            : '<circle cx="50" cy="54" r="5.5" fill="#1b2a4a"/><circle cx="70" cy="54" r="5.5" fill="#1b2a4a"/>';
+  const mouth = mood==="cheer" ? '<path d="M50 66 q10 14 20 0" stroke="#1b2a4a" stroke-width="4" fill="#ff8a3d" stroke-linejoin="round"/>'
+              : '<path d="M52 66 q8 8 16 0" stroke="#1b2a4a" stroke-width="4" fill="none" stroke-linecap="round"/>';
+  return `
+   <g>
+    <rect x="55" y="14" width="4" height="14" rx="2" fill="#5a6a86"/><circle cx="57" cy="12" r="6" fill="#ffd23f"/>
+    <rect x="26" y="30" width="68" height="58" rx="20" fill="#3da5ff"/>
+    <rect x="33" y="40" width="54" height="36" rx="14" fill="#eef4fb"/>
+    ${eye}${mouth}
+    <circle cx="41" cy="64" r="4" fill="#ff8a3d" opacity=".5"/><circle cx="79" cy="64" r="4" fill="#ff8a3d" opacity=".5"/>
+    <rect x="20" y="48" width="8" height="18" rx="4" fill="#1f7fd6"/><rect x="92" y="48" width="8" height="18" rx="4" fill="#1f7fd6"/>
+   </g>`;
+}
+function paintMascots(mood){
+  ["heroMascot","playMascot","resultMascot"].forEach(id=>{
+    const el=document.getElementById(id); if(el)el.innerHTML=mascot(mood);
+  });
+}
+
+/* =========================================================
+   画面キーボード
+   ========================================================= */
+const KB_ROWS=[
+  "1234567890".split(""),
+  "qwertyuiop".split(""),
+  "asdfghjkl".split(""),
+  "zxcvbnm".split(""),
+];
+const HOME=new Set(["a","s","d","f","j","k","l"]);
+let keyEls={};
+function buildKeyboard(){
+  const kb=document.getElementById("keyboard");kb.innerHTML="";keyEls={};
+  KB_ROWS.forEach(row=>{
+    const r=document.createElement("div");r.className="krow";
+    row.forEach(ch=>{
+      const k=document.createElement("div");
+      k.className="key"+(HOME.has(ch)?" home":"");
+      k.textContent=ch.toUpperCase();k.dataset.k=ch;
+      keyEls[ch]=k;r.appendChild(k);
+    });
+    kb.appendChild(r);
+  });
+  const sr=document.createElement("div");sr.className="krow";
+  const sp=document.createElement("div");sp.className="key space";sp.textContent="space";sp.dataset.k=" ";
+  keyEls[" "]=sp;sr.appendChild(sp);kb.appendChild(sr);
+}
+function highlightKey(ch){
+  Object.values(keyEls).forEach(k=>k.classList.remove("next"));
+  if(ch&&keyEls[ch])keyEls[ch].classList.add("next");
+}
+function flashHit(ch){
+  const k=keyEls[ch]; if(!k)return;
+  k.classList.add("hit");setTimeout(()=>k.classList.remove("hit"),120);
+}
+
+/* =========================================================
+   ゲーム状態
+   ========================================================= */
+let G=null; // 現在のプレイ状態
+
+const screens=["home","sessions","play","result"];
+function show(name){
+  screens.forEach(s=>document.getElementById("screen-"+s).classList.toggle("hidden",s!==name));
+  document.getElementById("homeBtn").classList.toggle("hidden",name==="home");
+  window.scrollTo(0,0);
+}
+
+function renderHome(){
+  paintMascots("happy");
+  const grid=document.getElementById("levelGrid");grid.innerHTML="";
+  Object.values(LEVELS).forEach(lv=>{
+    const c=document.createElement("button");
+    c.className="level-card";c.style.setProperty("--c",lv.color);
+    c.innerHTML=`<div class="lv-icon">${lv.icon}</div>
+      <span class="lv-grade">${lv.grade}</span>
+      <div class="lv-title">${lv.title}</div>
+      <div class="lv-sub">${lv.sub}</div>`;
+    c.onclick=()=>openLevel(lv.key);
+    grid.appendChild(c);
+  });
+  show("home");
+}
+
+let curLevel=null;
+function openLevel(key){
+  curLevel=LEVELS[key];
+  document.getElementById("sessBadge").textContent=curLevel.grade;
+  document.getElementById("sessBadge").style.background=curLevel.color;
+  document.getElementById("sessTitle").textContent=curLevel.title;
+  const grid=document.getElementById("sessionGrid");grid.innerHTML="";
+  curLevel.sessions.forEach((s,i)=>{
+    const best=getStars(curLevel.key,i);
+    const stars=[0,1,2].map(n=>`<span class="${n<best?"on":""}">★</span>`).join("");
+    const c=document.createElement("button");
+    c.className="session-card";
+    c.innerHTML=`<div class="s-num">だい ${i+1} かい</div>
+      <div class="s-title">${s.title}</div>
+      <div class="s-desc">${s.desc}</div>
+      <div class="s-stars">${stars}</div>`;
+    c.onclick=()=>startSession(i);
+    grid.appendChild(c);
+  });
+  show("sessions");
+}
+
+/* ---- 進捗（★）保存：sessionStorage非対応のためメモリ保持 ---- */
+const starStore={};
+function starKey(lv,i){return lv+"#"+i;}
+function getStars(lv,i){return starStore[starKey(lv,i)]||0;}
+function setStars(lv,i,v){const k=starKey(lv,i);starStore[k]=Math.max(getStars(lv,i),v);}
+
+/* =========================================================
+   セッション進行
+   ========================================================= */
+function startSession(sessIdx){
+  const sess=curLevel.sessions[sessIdx];
+  G={
+    level:curLevel, sessIdx, sess,
+    stageIdx:0,
+    timed: sess.timed||0,
+    correct:0, mistakes:0, typedChars:0,
+    startTime:Date.now(),
+    timerId:null, timeLeft: sess.timed||0,
+  };
+  paintMascots("happy");
+  buildKeyboard();
+  document.getElementById("footNote").textContent =
+    curLevel.key==="low" ? "でてきた もじの キーを さがして おそう"
+                         : "オレンジに 光った キーを おそう";
+  show("play");
+  loadStage();
+}
+
+function loadStage(){
+  const st=G.sess.stages[G.stageIdx];
+  G.stage=st;
+  G.items=st.items.slice();
+  if(G.timed){ shuffle(G.items); }
+  G.itemIdx=0;
+  G.typed="";
+  document.getElementById("stageName").textContent=`【${G.stageIdx+1}/${G.sess.stages.length}】${st.name}`;
+  document.getElementById("stagePrompt").textContent=st.prompt;
+  if(G.timed){
+    startTimer();
+    document.getElementById("skipBtn").classList.add("hidden");
+  }else{
+    document.getElementById("skipBtn").classList.remove("hidden");
+  }
+  loadItem();
+}
+
+function startTimer(){
+  G.timeLeft=G.timed;
+  if(G.timerId)clearInterval(G.timerId);
+  G.timerId=setInterval(()=>{
+    G.timeLeft--;
+    updateStat();
+    if(G.timeLeft<=0){clearInterval(G.timerId);finishSession();}
+  },1000);
+}
+
+function loadItem(){
+  if(G.itemIdx>=G.items.length){
+    if(G.timed){ // タイム制：再シャッフルしてループ
+      shuffle(G.items);G.itemIdx=0;
+    }else{
+      nextStage();return;
+    }
+  }
+  const it=G.items[G.itemIdx];
+  G.units=buildUnits(it.type);
+  G.typed="";
+  renderItem();
+  updateStat();
+  updateProgress();
+}
+
+function renderItem(){
+  const it=G.items[G.itemIdx];
+  const area=document.getElementById("stageArea");
+  const nx=nextChar(G.units,0,G.typed);
+  highlightKey(nx);
+
+  if(it.kind==="letter"){
+    area.innerHTML=`<div class="find-label">${it.display.match(/[0-9]/)?"この すうじを おそう":"この もじを おそう"}</div>
+      <div class="display-letter" id="bigItem">${it.display}</div>`;
+  }else{
+    // かな/ことば/文：打った分を色分け表示＋ローマ字ヒント
+    const full=primaryRomaji(G.units);
+    const doneLen=G.typed.length;
+    const hint=`<span class="done">${esc(full.slice(0,doneLen))}</span>`+
+               (full[doneLen]?`<span class="next">${esc(full[doneLen])}</span>`:"")+
+               `${esc(full.slice(doneLen+1))}`;
+    const big = it.kind==="sentence"
+      ? `<div class="display-word" id="bigItem">${esc(it.display).replace(/ /g,"␣")}</div>`
+      : `<div class="display-word" id="bigItem">${esc(it.display)}</div>`;
+    area.innerHTML=`${big}<div class="romaji-hint">${hint}</div>`;
+  }
+}
+
+function primaryRomaji(units){return units.map(o=>o[0]).join("");}
+
+function updateStat(){
+  const el=document.getElementById("stageStat");
+  if(G.timed){
+    el.innerHTML=`⏱ ${G.timeLeft}びょう<br>✅ ${G.correct}もじ`;
+  }else{
+    el.innerHTML=`✅ ${G.correct}<br>✕ ${G.mistakes}`;
+  }
+}
+function updateProgress(){
+  if(G.timed){
+    document.getElementById("progBar").style.width=(100*(G.timed-G.timeLeft)/G.timed)+"%";
+  }else{
+    document.getElementById("progBar").style.width=(100*G.itemIdx/G.items.length)+"%";
+  }
+}
+
+/* ---- キー入力 ---- */
+function handleKey(raw){
+  if(!G||document.getElementById("screen-play").classList.contains("hidden"))return;
+  let ch=raw.length===1?raw.toLowerCase():raw;
+  if(raw===" "||raw==="Spacebar")ch=" ";
+  if(ch.length!==1)return;
+  const cand=G.typed+ch;
+  if(isPrefix(G.units,0,cand)){
+    G.typed=cand;
+    G.typedChars++;
+    flashHit(nextCharRaw(ch));
+    sGood();
+    if(isComplete(G.units,0,G.typed)){
+      G.correct += (G.items[G.itemIdx].kind==="letter")?1:1; // 1アイテム=1カウント
+      sWord();
+      const big=document.getElementById("bigItem");
+      if(big){big.classList.add("pop");setTimeout(()=>big&&big.classList.remove("pop"),300);}
+      G.itemIdx++;
+      setTimeout(loadItem,180);
+    }else{
+      renderItem();
+    }
+  }else{
+    G.mistakes++;
+    sBad();
+    const big=document.getElementById("bigItem");
+    if(big){big.classList.add("shake");setTimeout(()=>big&&big.classList.remove("shake"),250);}
+    updateStat();
+  }
+}
+function nextCharRaw(ch){return ch;}
+
+document.addEventListener("keydown",e=>{
+  if(document.getElementById("screen-play").classList.contains("hidden"))return;
+  if(e.key===" "){e.preventDefault();}
+  if(e.key.length===1||e.key===" ")handleKey(e.key);
+});
+
+/* ---- ステージ送り / 結果 ---- */
+function nextStage(){
+  G.stageIdx++;
+  if(G.stageIdx>=G.sess.stages.length){finishSession();return;}
+  loadStage();
+}
+function finishSession(){
+  if(G.timerId)clearInterval(G.timerId);
+  const total=G.correct+G.mistakes;
+  const acc= total? Math.round(100*G.correct/(G.correct+G.mistakes)) : 100;
+  const secs=Math.max(1,Math.round((Date.now()-G.startTime)/1000));
+  let stars=1;
+  if(G.timed){
+    if(G.correct>=15)stars=3; else if(G.correct>=8)stars=2; else stars=1;
+  }else{
+    if(acc>=95)stars=3; else if(acc>=80)stars=2; else stars=1;
+  }
+  setStars(G.level.key,G.sessIdx,stars);
+  showResult(stars,acc,secs);
+}
+
+function showResult(stars,acc,secs){
+  paintMascots("cheer");
+  document.getElementById("resultStars").innerHTML=[0,1,2].map(n=>`<span class="${n<stars?"on":""}">★</span>`).join("");
+  const msgs=["よく がんばったね！","すごい！その ちょうし！","かんぺき！タイピング名人だ！"];
+  document.getElementById("resultMsg").textContent="あいろ：「"+msgs[stars-1]+"」";
+  const cpm = G.timed ? Math.round(G.typedChars/G.timed*60) : Math.round(G.typedChars/secs*60);
+  const stats=[
+    {v:G.correct, l:G.timed?"うてた かず":"せいかい"},
+    {v:G.mistakes, l:"まちがい"},
+    {v:acc+"%", l:"せいかくさ"},
+    {v:cpm, l:"1ぷんかん もじ"},
+  ];
+  document.getElementById("resultStats").innerHTML=stats.map(s=>
+    `<div class="stat-box"><div class="v">${s.v}</div><div class="l">${s.l}</div></div>`).join("");
+  // つぎの回ボタン制御
+  const hasNext=G.sessIdx<G.level.sessions.length-1;
+  const nb=document.getElementById("nextBtn");
+  nb.textContent=hasNext?"つぎの かいへ ▶":"かいえらびへ ▶";
+  nb.onclick=()=>{ if(hasNext){startSession(G.sessIdx+1);} else {openLevel(G.level.key);} };
+  document.getElementById("retryBtn").onclick=()=>startSession(G.sessIdx);
+  sClear();
+  show("result");
+}
+
+/* =========================================================
+   ユーティリティ・ボタン
+   ========================================================= */
+function esc(s){return (s+"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+document.getElementById("soundBtn").onclick=function(){
+  soundOn=!soundOn;this.setAttribute("aria-pressed",soundOn);
+  this.textContent=soundOn?"🔊 おと":"🔇 おと";
+  if(soundOn)sGood();
+};
+document.getElementById("homeBtn").onclick=renderHome;
+document.getElementById("skipBtn").onclick=()=>{ if(G&&!G.timed){nextStage();} };
+document.querySelectorAll("[data-back]").forEach(b=>{
+  b.onclick=()=>{ const t=b.dataset.back; if(t==="home")renderHome(); else openLevel(curLevel.key); if(G&&G.timerId)clearInterval(G.timerId); };
+});
+
+renderHome();
+</script>
+</body>
+</html>
